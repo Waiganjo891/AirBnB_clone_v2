@@ -99,15 +99,37 @@ class HBNBCommand(cmd.Cmd):
         to the JSON file.
         Usage: create <class name>
         """
-        commands = shlex.split(arg)
-        if len(commands) == 0:
-            print("** class name missing **")
-        elif commands[0] not in self.valid_classes:
-            print("** class doesn't exist **")
-        else:
-            new_instance = eval(f"{commands[0]}()")
-            storage.save()
+        try:
+            class_name = arg.split(" ")[0]
+            if len(class_name) == 0:
+                print("** class name missing **")
+                return
+            if class_name and class_name not in self.valid_classes:
+                print("** class doesn't exist **")
+                return
+            kwargs = {}
+            commands = arg.split(" ")
+            for i in range(1, len(commands)):
+                key = commands[i].split("=")[0]
+                value = commands[i].split("=")[1]
+                if value.startswith('"'):
+                    value = value.strip('"').replace("_", " ")
+                else:
+                    try:
+                        value = eval(value)
+                    except (SyntaxError, NameError):
+                        continue
+                kwargs[key] = value
+            if kwargs == {}:
+                new_instance = eval(class_name)()
+            else:
+                new_instance = eval(class_name)(**kwargs)
+            storage.new(new_instance)
             print(new_instance.id)
+            storage.save()
+        except ValueError:
+            print(ValueError)
+            return
 
     def do_show(self, arg):
         """
