@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from os import getenv
-from models.base_model import BaseModel
 from models.base_model import Base
+from models.base_model import BaseModel
 from models.amenity import Amenity
 from models.city import City
 from models.place import Place
@@ -84,7 +84,7 @@ class DBStorage:
         session_factory = sessionmaker(
                             bind=self.__engine, expire_on_commit=False
                             )
-        session = scoped_session(session_factory)
+        Session = scoped_session(session_factory)
         self.__session = Session()
 
     def close(self):
