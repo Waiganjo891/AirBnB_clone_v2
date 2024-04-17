@@ -6,8 +6,6 @@ from fabric.api import env, local, put, run
 from datetime import datetime
 from os.path import exists, isdir
 env.hosts = ['100.26.214.182', '54.162.5.131']
-env.user = 'name'
-env.key_filename = '/root/.ssh'
 
 
 def do_pack():
